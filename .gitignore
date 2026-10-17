@@ -1,0 +1,8 @@
+env.local.ps1
+.env
+.env.*
+*.secret.ps1
+*.key
+*.pem
+__pycache__/
+.DS_Store

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="730" viewBox="0 0 1200 730" role="img" aria-labelledby="title desc">
+<title id="title">Proxmox home lab: logical architecture</title>
+<desc id="desc">Administrator connects through a Python MCP adapter to the Proxmox API. Three nodes run virtual machines and containers. All nodes use shared NFS backups provided by a NAS VM. Local storage is distinct from shared storage.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#62c6d2" stroke-width="1.5"/></marker></defs>
+<rect width="1200" height="730" rx="16" fill="#101b2b"/>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="48" y="48" fill="#7ed6df" font-size="13" letter-spacing="2">NOAH / INFRASTRUCTURE PORTFOLIO</text>
+<text x="48" y="90" fill="#f3f7fc" font-size="32" font-weight="700">Proxmox home lab</text>
+<text x="48" y="119" fill="#a7b7ce" font-size="16">Three nodes · QEMU + LXC · Shared NFS · Scheduled backups</text>
+<rect x="48" y="153" width="330" height="62" rx="10" fill="#1a2c41" stroke="#35536c"/>
+<text x="68" y="179" fill="#f3f7fc" font-size="17" font-weight="600">Administrator / MCP client</text>
+<text x="68" y="201" fill="#a7b7ce" font-size="13">Python adapter · verified HTTPS · API token</text>
+<path d="M378 184H456" stroke="#62c6d2" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="465" y="153" width="687" height="62" rx="10" fill="#163543" stroke="#4b8390"/>
+<text x="490" y="179" fill="#f3f7fc" font-size="17" font-weight="600">Proxmox management API</text>
+<text x="490" y="201" fill="#b7d8df" font-size="13">Logical management relationship — physical networking omitted</text>
+<path d="M600 215V242H227V266 M600 242V266 M600 242H973V266" fill="none" stroke="#62c6d2" stroke-width="2"/>
+<rect x="48" y="266" width="358" height="244" rx="12" fill="#192a40" stroke="#3b5470"/>
+<rect x="421" y="266" width="358" height="244" rx="12" fill="#192a40" stroke="#3b5470"/>
+<rect x="794" y="266" width="358" height="244" rx="12" fill="#192a40" stroke="#3b5470"/>
+<text x="72" y="301" fill="#7ed6df" font-size="21" font-weight="700">NODE A</text>
+<text x="445" y="301" fill="#7ed6df" font-size="21" font-weight="700">NODE B</text>
+<text x="818" y="301" fill="#7ed6df" font-size="21" font-weight="700">NODE C</text>
+<g fill="#f3f7fc" font-size="16">
+<text x="72" y="338">Primary AMP / game-server VM</text>
+<text x="72" y="367">Monitoring container</text>
+<text x="72" y="396">Windows utility + management</text>
+<text x="445" y="338">Secondary AMP / game-server VM</text>
+<text x="445" y="367">Reverse-proxy container</text>
+<text x="818" y="338">OpenMediaVault NAS VM</text>
+<text x="818" y="367">NFS service for the lab</text>
+</g>
+<text x="72" y="425" fill="#a7b7ce" font-size="14">Also: three stopped DNS / lab guests</text>
+<text x="818" y="402" fill="#f2c47c" font-size="14">Passthrough data disk excluded</text>
+<text x="818" y="422" fill="#f2c47c" font-size="14">from the NAS VM backup</text>
+<rect x="72" y="455" width="310" height="33" rx="6" fill="#233b53"/>
+<text x="87" y="477" fill="#c7d9ee" font-size="14">Local ZFS guest storage</text>
+<rect x="445" y="455" width="310" height="33" rx="6" fill="#233b53"/>
+<text x="460" y="477" fill="#c7d9ee" font-size="14">Local ZFS + separate local SSD</text>
+<rect x="818" y="455" width="310" height="33" rx="6" fill="#233b53"/>
+<text x="833" y="477" fill="#c7d9ee" font-size="14">NAS OS disk included in schedule</text>
+<path d="M227 510V544H973V510 M600 544V570" fill="none" stroke="#62c6d2" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="52" y="544" fill="#a7b7ce" font-size="13">Backup path</text>
+<rect x="48" y="577" width="1104" height="88" rx="12" fill="#153b43" stroke="#4b8390"/>
+<text x="72" y="609" fill="#f3f7fc" font-size="20" font-weight="700">SHARED NFS TARGET</text>
+<text x="72" y="639" fill="#b7d8df" font-size="15">7 guests scheduled · Tue / Sat 03:00 · zstd · 4 recent / 4 weekly / 2 monthly retention rules</text>
+<text x="48" y="700" fill="#a7b7ce" font-size="13">Sanitized logical diagram · October 12, 2026 inventory · Recorded backup success; restore drill remains future work</text>
+</g></svg>
