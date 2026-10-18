@@ -6,6 +6,7 @@
 | --- | --- |
 | Inventory | Mapped ten guests across three Proxmox nodes, including purpose, startup settings, protection, and backup coverage |
 | Storage | Separated shared NFS from node-local ZFS, SSD, and staging storage in the documentation |
+| Networking | Connected the OVH-hosted OPNsense firewall to game-server nodes over WireGuard for public game connectivity; [networking walkthrough](networking.md) |
 | Backups | Configured seven guests for Tuesday/Saturday backups with zstd compression and retention rules |
 | Backup test | Successfully backed up the monitoring container to NFS on October 12, 2026; archive approximately 623 MB |
 | Package sources | Switched one lab node to no-subscription repositories and completed `apt update` |

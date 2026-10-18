@@ -1,8 +1,8 @@
 # Proxmox Home Lab
 
-**A three-node Proxmox lab running Linux and Windows workloads, shared storage, monitoring, and game servers.**
+**A three-node Proxmox lab with Linux and Windows workloads, shared storage, game servers, and OPNsense/WireGuard networking.**
 
-I use this lab to host services and practice the work that keeps them running: managing VMs and containers, organizing storage, configuring backups, and troubleshooting service issues. This repository walks through the setup, the decisions behind it, and the improvements I’m working on.
+I use this lab to host services and practice the work that keeps them running: managing VMs and containers, organizing storage, configuring backups, connecting game servers through a cloud firewall, and troubleshooting service issues. This repository walks through the setup, the decisions behind it, and the improvements I’m working on.
 
 ![Logical architecture of the three-node lab](assets/architecture.svg)
 
@@ -13,6 +13,7 @@ I use this lab to host services and practice the work that keeps them running: m
 | Compute | Three Proxmox nodes running QEMU VMs and LXC containers |
 | Workloads | AMP game servers, Windows utility VM, datacenter management, and network/security labs |
 | Services | Uptime Kuma, Nginx Proxy Manager, and OpenMediaVault |
+| Networking | Cloud-hosted OPNsense firewall on an OVH VPS, linked to game-server nodes through WireGuard |
 | Storage | Node-local ZFS, local SSD storage, and shared NFS |
 | Backups | Seven guests scheduled twice weekly with zstd compression and retention rules |
 | Automation | A [Python MCP adapter](https://github.com/noaht360/proxmox-mcp) for the Proxmox API |
@@ -20,6 +21,7 @@ I use this lab to host services and practice the work that keeps them running: m
 ## Explore the setup
 
 - [Architecture and design decisions](docs/architecture.md) — where services run and how storage connects
+- [OPNsense and WireGuard](docs/networking.md) — how players reach the game servers through the cloud firewall and tunnels
 - [Service inventory](docs/service-map.md) — guest roles, startup settings, and backup coverage
 - [Storage inventory](docs/storage-map.md) — shared storage versus node-local storage
 - [Backup and recovery](docs/backup-and-recovery.md) — schedule, exclusions, and restore procedure
@@ -27,6 +29,8 @@ I use this lab to host services and practice the work that keeps them running: m
 - [Lab progress](docs/evidence.md) — completed work and next improvements
 
 ## Decisions that matter
+
+**The public entry point is separate from game hosting.** OPNsense runs on a cloud VPS and forwards the required game traffic through WireGuard to the game-server nodes. This brings the public firewall, tunnel routing, and game services into one connection path.
 
 **Local and shared storage need different handling.** A storage name can exist on several nodes while referring to separate local disks. I documented each storage target’s scope so moves and recovery work start with the right assumptions.
 

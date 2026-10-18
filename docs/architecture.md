@@ -1,6 +1,6 @@
 # Architecture and design decisions
 
-The lab has three Proxmox nodes, ten guests, and a shared NFS target. The diagram shows management and storage relationships; physical networking is omitted.
+The compute and storage inventory covers three Proxmox nodes, ten guests, and a shared NFS target. A cloud-hosted OPNsense firewall connects to the game-server nodes over WireGuard. The first diagram shows compute and storage relationships; the networking section below shows the public game connection path.
 
 ```mermaid
 flowchart TB
@@ -47,6 +47,14 @@ If the NAS VM is unavailable, its OS/configuration backup needs to be reachable 
 ## Supporting services
 
 Uptime Kuma provides the monitoring service, and Nginx Proxy Manager provides the reverse-proxy service. Keeping their roles in the inventory makes it easier to identify service dependencies during maintenance.
+
+## Firewall and VPN connections
+
+![Cloud firewall and WireGuard game-server connection path](../assets/networking.svg)
+
+OPNsense runs on an OVH-hosted VPS. Players connect through that public entry point, and the firewall forwards the game’s required traffic over WireGuard to the game-server nodes. Replies need to follow the corresponding return path through the tunnel and cloud firewall. The [networking walkthrough](networking.md) explains the flow and how to troubleshoot it.
+
+The cloud firewall is separate from the Proxmox compute and storage layout above. The network diagram groups game-server nodes by role rather than exposing their tunnel identities or mapping individual peer configurations.
 
 ## Startup behavior
 

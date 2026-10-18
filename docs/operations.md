@@ -1,5 +1,9 @@
 # Maintenance and troubleshooting
 
+## Firewall and tunnel troubleshooting
+
+The [OPNsense and WireGuard walkthrough](networking.md#troubleshooting-path) follows a connection from peer communication through routing, firewall policy, the target service, and the return path. It covers missing handshakes, unreachable services, one-way traffic, and MTU or idle-time issues.
+
 ## APT repository maintenance
 
 One lab node was configured with Proxmox enterprise repositories. I switched it to the no-subscription repositories for the lab and completed `apt update` successfully.

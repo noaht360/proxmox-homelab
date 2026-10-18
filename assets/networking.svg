@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+<title id="title">Public game connectivity through OPNsense and WireGuard</title>
+<desc id="desc">Players connect to an OPNsense firewall on an OVH VPS. The firewall forwards game traffic through encrypted WireGuard tunnels to game-server nodes. Replies need the return path through the tunnels and cloud firewall. No addresses, endpoints, ports, or keys are shown.</desc>
+<defs>
+<marker id="forward" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#75d4df" stroke-width="1.5"/></marker>
+<marker id="return" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#f2c47c" stroke-width="1.5"/></marker>
+</defs>
+<rect width="1200" height="620" rx="16" fill="#101b2b"/>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="48" y="45" fill="#7ed6df" font-size="13" letter-spacing="2">NETWORKING / GAME HOSTING</text>
+<text x="48" y="88" fill="#f3f7fc" font-size="32" font-weight="700">Cloud firewall to game-server nodes</text>
+<text x="48" y="118" fill="#a7b7ce" font-size="16">OPNsense public entry point · WireGuard tunnels · Service-specific forwarding</text>
+
+<rect x="48" y="175" width="250" height="240" rx="12" fill="#192a40" stroke="#3b5470"/>
+<text x="72" y="211" fill="#7ed6df" font-size="15" font-weight="700" letter-spacing="1">PLAYERS</text>
+<text x="72" y="250" fill="#f3f7fc" font-size="23" font-weight="700">Game clients</text>
+<text x="72" y="289" fill="#c4d1e2" font-size="16">Connect through the</text>
+<text x="72" y="313" fill="#c4d1e2" font-size="16">cloud public endpoint</text>
+<rect x="72" y="356" width="202" height="34" rx="6" fill="#233b53"/>
+<text x="86" y="378" fill="#d2e0ef" font-size="14">Game-specific TCP / UDP</text>
+
+<path d="M298 282H410" stroke="#75d4df" stroke-width="2.5" marker-end="url(#forward)"/>
+<text x="312" y="255" fill="#a7b7ce" font-size="13">Game traffic</text>
+
+<rect x="420" y="175" width="320" height="240" rx="12" fill="#153b43" stroke="#4b8390"/>
+<text x="444" y="211" fill="#7ed6df" font-size="15" font-weight="700" letter-spacing="1">OVH CLOUD VPS</text>
+<text x="444" y="250" fill="#f3f7fc" font-size="25" font-weight="700">OPNsense firewall</text>
+<text x="444" y="289" fill="#c4dce1" font-size="16">Firewall policy</text>
+<text x="444" y="317" fill="#c4dce1" font-size="16">Game-port forwarding</text>
+<text x="444" y="345" fill="#c4dce1" font-size="16">Tunnel routing</text>
+<text x="444" y="384" fill="#9fc4cc" font-size="14">Public side → encrypted tunnel</text>
+
+<path d="M740 282H860" stroke="#75d4df" stroke-width="2.5" marker-end="url(#forward)"/>
+<text x="768" y="242" fill="#7ed6df" font-size="14" font-weight="600">WireGuard</text>
+<text x="767" y="263" fill="#a7b7ce" font-size="12">Encrypted links</text>
+
+<rect x="870" y="175" width="282" height="240" rx="12" fill="#192a40" stroke="#3b5470"/>
+<text x="894" y="211" fill="#7ed6df" font-size="15" font-weight="700" letter-spacing="1">GAME-SERVER NODES</text>
+<text x="894" y="250" fill="#f3f7fc" font-size="23" font-weight="700">Game workloads</text>
+<text x="894" y="289" fill="#c4d1e2" font-size="16">WireGuard peers</text>
+<text x="894" y="317" fill="#c4d1e2" font-size="16">Local firewall</text>
+<text x="894" y="345" fill="#c4d1e2" font-size="16">Listening game services</text>
+<text x="894" y="384" fill="#a7b7ce" font-size="14">Forward to the intended service</text>
+
+<path d="M1011 415V457H173V427" fill="none" stroke="#f2c47c" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#return)"/>
+<text x="295" y="485" fill="#f2c47c" font-size="15">Return traffic follows the tunnel and cloud firewall path</text>
+
+<rect x="48" y="515" width="1104" height="63" rx="10" fill="#1a2c41"/>
+<text x="70" y="541" fill="#f3f7fc" font-size="17" font-weight="600">Verify the full connection</text>
+<text x="70" y="564" fill="#a7b7ce" font-size="14">Peer handshake → route → forwarding / firewall policy → game service → return path</text>
+<text x="48" y="603" fill="#a7b7ce" font-size="12">Logical connection flow · Role labels only · No deployed addresses, endpoint names, port values, or keys</text>
+</g>
+</svg>
