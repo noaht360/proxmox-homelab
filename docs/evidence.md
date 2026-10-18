@@ -1,26 +1,28 @@
-# Evidence and scope
+# Lab progress
 
-This portfolio was reconstructed from the existing private README, service map, storage map, and Python integration source. No live Proxmox connections or guest changes were performed during preparation.
+## Completed work
 
-| Statement | Basis | Limit |
-| --- | --- | --- |
-| Three-node lab / ten guests | Existing service inventory | Historical snapshot; no fresh live inventory |
-| Shared NFS and local ZFS | Existing storage inventory | No new storage health test |
-| Seven guests selected for backup | Existing job notes | Not proof every scheduled run completed |
-| Monitoring-container backup successful | October 12 notes, ~623 MB | Raw task log and restore evidence unavailable |
-| Package-index update successful | Existing housekeeping notes | Not a complete OS-upgrade test |
-| Guest agents not responding | Existing service-map notes | Follow-up diagnosis not yet recorded |
-| Public integration checks | Companion repository's automated tests | Offline checks, not live API compatibility certification |
+| Area | Work completed |
+| --- | --- |
+| Inventory | Mapped ten guests across three Proxmox nodes, including purpose, startup settings, protection, and backup coverage |
+| Storage | Separated shared NFS from node-local ZFS, SSD, and staging storage in the documentation |
+| Backups | Configured seven guests for Tuesday/Saturday backups with zstd compression and retention rules |
+| Backup test | Successfully backed up the monitoring container to NFS on October 12, 2026; archive approximately 623 MB |
+| Package sources | Switched one lab node to no-subscription repositories and completed `apt update` |
+| Housekeeping | Added guest tags and core-guest protection, set on-boot behavior, ejected unused installation media, and removed two unused detached volumes |
+| Automation | Added a [Python MCP adapter](https://github.com/noaht360/proxmox-mcp) with an offline demo and automated checks |
 
-## Visual evidence
+## In progress
 
-The architecture graphic is an authored diagram derived from the inventory. It is not a screenshot. No live-console screenshots were available for publication in this preparation.
+**Guest agents:** agent support is enabled in Proxmox for five QEMU VMs, but communication was not working in the October 12 inventory. The next step is checking the in-guest packages, services, and communication devices using the [troubleshooting procedure](operations.md#guest-agent-investigation).
 
-Useful additions after a read-only review of the lab:
+**Recovery testing:** the monitoring-container backup completed successfully; the isolated restore drill is pending. See the [restore procedure](backup-and-recovery.md#planned-restore-drill).
 
-- Sanitized cluster overview showing the three nodes.
-- Backup-job settings showing selected guests, schedule, and retention.
-- A successful backup task log with hostnames, addresses, and user information redacted.
-- A later isolated restore-test record and service verification.
+## Next improvements
 
-The portfolio stands on its documentation today; screenshots should be added only when they correspond to an actual observed result.
+- Keep a NAS bootstrap copy accessible independently of the NAS VM.
+- Add separate protection for the NAS passthrough data disk.
+- Test application readiness and startup behavior across nodes.
+- Review scheduled backup results and test failure notifications.
+
+The service and storage inventories reflect the lab on October 12, 2026. Integration test results are maintained in the [adapter repository](https://github.com/noaht360/proxmox-mcp/blob/main/docs/verification.md).

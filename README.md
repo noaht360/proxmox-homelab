@@ -1,50 +1,43 @@
 # Proxmox Home Lab
 
-**Three-node virtualization lab with Linux and Windows workloads, shared NFS storage, service monitoring, and scheduled backups.**
+**A three-node Proxmox lab running Linux and Windows workloads, shared storage, monitoring, and game servers.**
 
-I use this lab to practice infrastructure administration through running services: game hosting, a reverse proxy, monitoring, and storage. This repository explains the environment, the operational changes recorded in my lab notes, and the recovery work still to complete.
+I use this lab to host services and practice the work that keeps them running: managing VMs and containers, organizing storage, configuring backups, and troubleshooting service issues. This repository walks through the setup, the decisions behind it, and the improvements I’m working on.
 
 ![Logical architecture of the three-node lab](assets/architecture.svg)
 
-## What this demonstrates
+## Lab overview
 
-| Area | Evidence |
+| Component | Setup |
 | --- | --- |
-| Virtualization | QEMU VMs and LXC containers distributed across three Proxmox nodes |
-| Storage | Node-local ZFS storage distinguished from shared NFS; explicit backup exclusions |
-| Operations | Service inventory, startup ordering, deletion protection, and guest-agent follow-up |
-| Backup planning | Seven scheduled guests, documented retention, and a successful manual backup recorded in the lab notes |
-| Troubleshooting | APT repository maintenance and investigation of nonresponding guest agents |
-| Automation | A companion Python adapter for the Proxmox API, exposed through MCP |
+| Compute | Three Proxmox nodes running QEMU VMs and LXC containers |
+| Workloads | AMP game servers, Windows utility VM, datacenter management, and network/security labs |
+| Services | Uptime Kuma, Nginx Proxy Manager, and OpenMediaVault |
+| Storage | Node-local ZFS, local SSD storage, and shared NFS |
+| Backups | Seven guests scheduled twice weekly with zstd compression and retention rules |
+| Automation | A [Python MCP adapter](https://github.com/noaht360/proxmox-mcp) for the Proxmox API |
 
-## Start here
+## Explore the setup
 
-- [Architecture and design decisions](docs/architecture.md)
-- [Service inventory](docs/service-map.md)
-- [Storage inventory](docs/storage-map.md)
-- [Backup policy and recovery plan](docs/backup-and-recovery.md)
-- [Operational case studies](docs/operations.md)
-- [Evidence and current limitations](docs/evidence.md)
-- [Python integration](https://github.com/noaht360/proxmox-mcp) — companion repository
+- [Architecture and design decisions](docs/architecture.md) — where services run and how storage connects
+- [Service inventory](docs/service-map.md) — guest roles, startup settings, and backup coverage
+- [Storage inventory](docs/storage-map.md) — shared storage versus node-local storage
+- [Backup and recovery](docs/backup-and-recovery.md) — schedule, exclusions, and restore procedure
+- [Maintenance and troubleshooting](docs/operations.md) — repository maintenance, guest agents, and cleanup
+- [Lab progress](docs/evidence.md) — completed work and next improvements
 
-## Selected decisions
+## Decisions that matter
 
-**Keep local and shared storage distinct.** A storage ID that exists on several nodes does not prove that it refers to one shared volume. The inventory makes that distinction explicit to avoid incorrect migration or recovery assumptions.
+**Local and shared storage need different handling.** A storage name can exist on several nodes while referring to separate local disks. I documented each storage target’s scope so moves and recovery work start with the right assumptions.
 
-**Document what the backup excludes.** The NAS VM's OS disk is scheduled for backup, but its large passthrough data disk is excluded. A successful VM backup therefore does not establish protection of all NAS data.
+**Backup coverage needs to include individual disks.** The NAS VM’s OS disk is included in the backup schedule, while its large passthrough data disk is excluded. That data needs its own protection plan.
 
-**Make operational dependencies visible.** The recorded startup order places storage before the game servers, followed by utility and management workloads. Startup order alone does not check application readiness across nodes.
+**Startup settings are part of service management.** Core guests have on-boot settings and deletion protection. Storage is assigned an earlier startup order than the game servers; service readiness across nodes still needs a separate check.
 
-## Verification status
+## Backup progress
 
-The source notes record a successful manual backup of the monitoring container on **October 12, 2026**, approximately **623 MB** compressed. The notes also record a scheduled job for seven guests. A full restore drill and sustained success of that schedule have **not** been established by the available evidence.
+A manual backup of the monitoring container completed successfully on **October 12, 2026**, producing an archive of approximately **623 MB**. An isolated restore drill is the next step toward checking recovery time and service functionality after a restore.
 
-This is a documented home lab, not a claim of high availability or a production disaster-recovery implementation. The NAS is itself a VM in this environment; that creates a recovery dependency discussed in the backup plan.
+The backup target is provided by a NAS VM inside this lab. An independent recovery copy and protection for the NAS data disk are also on the [improvement list](docs/evidence.md).
 
-## Scope and authorship
-
-This portfolio is based on my personal lab and its operational notes. The Python companion and documentation were developed with AI assistance; the repository separates recorded lab results, offline software checks, and future work. It contains no employer or customer configurations.
-
-Public identifiers are aliases. IP addresses, credentials, original hostnames, and exact export paths are omitted. The diagram is a logical reconstruction of the inventory, not a screenshot or a physical network wiring diagram.
-
-**Snapshot:** source lab notes dated October 12, 2026; portfolio prepared October 17, 2026. Service states are historical observations, not live monitoring.
+Node names, guest IDs, and storage names in these docs are aliases. The service inventory reflects the lab on October 12, 2026.

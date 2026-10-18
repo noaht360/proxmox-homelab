@@ -1,6 +1,6 @@
-# Architecture and decisions
+# Architecture and design decisions
 
-The documented environment contains three Proxmox nodes, ten guests, and one shared NFS storage target. Names below are public aliases.
+The lab has three Proxmox nodes, ten guests, and a shared NFS target. The diagram shows management and storage relationships; physical networking is omitted.
 
 ```mermaid
 flowchart TB
@@ -20,29 +20,34 @@ flowchart TB
     NAS --> Data[Passthrough data disk: excluded from VM backup]
 ```
 
-Arrows show management or storage relationships. They do not assert network segmentation, firewall policy, or exact packet paths. The inventory also includes three stopped lab/DNS guests on Node A, omitted here for readability.
+## Workload placement
 
-## 1. Mix VMs and containers according to workload
+| Node | Workloads |
+| --- | --- |
+| A | Primary game server, monitoring, Windows utility VM, datacenter management, and three stopped DNS/lab guests |
+| B | Secondary game server and reverse proxy |
+| C | OpenMediaVault NAS VM |
 
-The inventory uses QEMU VMs for Windows, game hosting, the NAS, the management VM, and the two network/security labs. The reverse proxy, monitoring service, and paused DNS service use LXC containers. This documents the deployed layout; it does not claim performance benchmarks comparing the two virtualization methods.
+Windows, game hosting, storage, management, and the network/security labs run as QEMU VMs. Monitoring, the reverse proxy, and the paused DNS service use LXC containers. The [service inventory](service-map.md) lists each guest and its operating settings.
 
-## 2. Preserve storage IDs in the running environment
+## Local and shared storage
 
-Human-friendly labels were added to the private inventory without renaming active storage IDs. The goal was to improve clarity while preserving existing disk references. This public repository uses aliases and is not an importable cluster configuration.
+Nodes A and B use local ZFS storage for guest disks. The NFS target is shared across the three nodes and holds backup archives and VM images.
 
-## 3. Treat the NAS as a recovery dependency
+I added readable labels to the storage inventory while keeping the original storage IDs in Proxmox. That improved the documentation without changing existing guest-disk references. The public documentation uses aliases for those labels.
 
-The NFS server runs inside the same lab. Keeping backups separate from a VM's local disk helps with some disk/guest failures, but is not the same as an independent off-site copy. Restoring the NAS VM requires a reachable copy of its backup and functioning access to the underlying storage. An independent bootstrap copy is proposed in the recovery plan; it is not recorded as implemented.
+One staging-storage label appears on multiple nodes but refers to local capacity on each node. A matching label alone is not enough to treat storage as shared during a guest move.
 
-## 4. Observe services and expose administration separately
+## NAS and recovery dependencies
 
-A monitoring container and a reverse-proxy container are present. Their existence does not prove that every endpoint has an alert, that TLS is configured correctly, or that management interfaces are isolated. Those controls require separate evidence.
+The NAS runs as a VM on Node C and provides the shared NFS service. This keeps storage management within the lab, but also means backup access depends on the NAS and its underlying storage.
 
-## Next verification work
+If the NAS VM is unavailable, its OS/configuration backup needs to be reachable through an independent recovery path. Establishing that bootstrap copy is planned work. The NAS passthrough data disk also needs a separate backup because it is excluded from the VM backup.
 
-1. Capture sanitized configuration and service-health evidence.
-2. Verify startup/readiness behavior after a controlled maintenance event.
-3. Run an isolated restore drill and measure elapsed recovery time.
-4. Validate an independent NAS bootstrap/off-site backup path.
+## Supporting services
 
-No changes to the live lab were made while preparing this portfolio.
+Uptime Kuma provides the monitoring service, and Nginx Proxy Manager provides the reverse-proxy service. Keeping their roles in the inventory makes it easier to identify service dependencies during maintenance.
+
+## Startup behavior
+
+The NAS VM has startup order 10, the game-server VMs order 20, the Windows utility VM order 30, and the management VM order 40. These are guest startup settings; application readiness and behavior across nodes still need to be tested during a controlled restart.
